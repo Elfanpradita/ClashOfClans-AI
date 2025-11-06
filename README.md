@@ -38,7 +38,7 @@ Ikuti langkah-langkah ini untuk menjalankan aplikasi di komputer Anda.
 1.  **Clone Repository Ini**
     (Ganti `nama-repo-anda` dengan nama repo GitHub Bapak)
     ```bash
-    git clone [https://github.com/Elfanpradita/nama-repo-anda.git](https://github.com/Elfanpradita/nama-repo-anda.git)
+    git clone [https://github.com/Elfanpradita/nama-repo-anda.git](https://github.com/Elfanpradita/ClashOfClans-AI.git)
     cd nama-repo-anda
     ```
 
