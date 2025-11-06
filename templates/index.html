@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoC Strategy Generator</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <style>
+        body { background-color: #f4f4f4; }
+        .container { max-width: 800px; }
+        .card { margin-top: 20px; }
+        #strategy-result {
+            white-space: pre-wrap; /* Agar format teks dari AI (newline) tetap rapi */
+            background-color: #fdfdfd;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            font-family: monospace;
+        }
+        .tutorial-img {
+            max-height: 250px;
+            width: auto;
+            max-width: 100%;
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">🤖 CoC AI Strategy Generator</h1>
+        <p class="text-center text-muted">Upload base lawan dan komposisi pasukan Anda untuk mendapat strategi.</p>
+
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">💡 Cara Menggunakan AI</h5>
+            </div>
+            <div class="card-body">
+                <p>Ikuti 4 langkah mudah ini untuk mendapatkan strategi serangan:</p>
+                <ol>
+                    <li>Ambil <strong>screenshot (SS) base lawan</strong> yang ingin Anda serang.</li>
+                    <li>Ambil <strong>screenshot komposisi pasukan</strong> Anda.</li>
+                    <li>Upload kedua gambar tersebut pada <strong>form di bawah ini</strong>.</li>
+                    <li>Klik tombol <strong>"Dapatkan Strategi!"</strong> dan tunggu AI menganalisis.</li>
+                </ol>
+                <hr>
+                <h6 class="text-center">Contoh Screenshot yang Baik</h6>
+                <div class="row text-center">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">1. Contoh Base Lawan</label><br>
+                        <img src="{{ url_for('static', filename='IMG_0033.PNG') }}" 
+                             class="img-fluid rounded shadow-sm tutorial-img" 
+                             alt="Contoh screenshot base lawan">
+                    </div>
+                    <div class="col-md-6 mt-3 mt-md-0">
+                        <label class="form-label fw-bold">2. Contoh Komposisi Pasukan</label><br>
+                        <img src="{{ url_for('static', filename='IMG_0034.PNG') }}" 
+                             class="img-fluid rounded shadow-sm tutorial-img" 
+                             alt="Contoh screenshot komposisi pasukan">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header">
+                <h5>Upload Gambar Anda</h5>
+            </div>
+            <div class="card-body">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <form id="strategy-form" action="/upload" method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="base_image" class="form-label"><b>1. Gambar Base Lawan</b></label>
+                        <input class="form-control" type="file" id="base_image" name="base_image" accept="image/*" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="army_image" class="form-label"><b>2. Gambar Komposisi Pasukan</b></label>
+                        <input class="form-control" type="file" id="army_image" name="army_image" accept="image/*" required>
+                    </div>
+                    <div class="d-grid">
+                        <button id="submit-button" type="submit" class="btn btn-primary btn-lg">
+                            Dapatkan Strategi!
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {% if strategy %}
+        <div class="card shadow-sm" id="result-card">
+            <div class="card-header bg-success text-white">
+                <h3 class="mb-0">📜 Strategi dari AI</h3>
+            </div>
+            <div class="card-body">
+                <div id="strategy-result">
+{{ strategy }}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div> <footer class="text-center py-4 mt-5">
+        <div class="container">
+            <p class="mb-1 text-muted">Created by <strong>Elfan Pradita</strong></p>
+            <p class="mb-0 fs-4">
+                <a href="https://github.com/Elfanpradita/" target="_blank" rel="noopener noreferrer" class="text-secondary mx-2">
+                    <i class="bi bi-github"></i>
+                </a>
+                <a href="https://www.instagram.com/elfan_pradita/" target="_blank" rel="noopener noreferrer" class="text-secondary mx-2">
+                    <i class="bi bi-instagram"></i>
+                </a>
+            </p>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const strategyForm = document.getElementById('strategy-form');
+        const submitButton = document.getElementById('submit-button');
+
+        strategyForm.addEventListener('submit', function() {
+            submitButton.disabled = true;
+            submitButton.innerHTML = `
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Menganalisis... Mohon Tunggu
+            `;
+        });
+    </script>
+
+</body>
+</html>

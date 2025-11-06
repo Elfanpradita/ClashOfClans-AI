@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "80:5000"
+    volumes:
+      # Mount kode kita ke dalam container agar perubahan langsung terlihat
+      - .:/app
+    env_file:
+      # Memuat variabel (API Key) dari file .env
+      - .env
